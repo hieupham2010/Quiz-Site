@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Home</title>
 </head>
+
 <body>
-    <h1>Welcome to home page</h1>
+    {%for item in data%}
+        <div class="d-inline-block mt-3 ml-3 w-25">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{item[1]}}</h5>
+                    <p>Open: {{item[2]}} - {{item[3]}}</p>
+                    <p>Time: {{item[4]}} minutes</p>
+                    <a href="/Quiz/{{item[0]}}">Take the quiz!!!</a>
+                </div>
+            </div>
+        </div>
+    {%endfor%}
 </body>
+
 </html>

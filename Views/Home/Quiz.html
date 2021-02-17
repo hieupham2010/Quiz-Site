@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>Quiz</title>
+</head>
+
+<body>
+    <form action="#">
+        {%for item in data%}
+            <h4 class="card-title">{{loop.index}}) {{item[1]}}</h4>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="question{{loop.index}}" id="answer1" value="{{item[2]}}">
+                <label class="form-check-label" for="answer1">
+                    {{item[2]}}
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="question{{loop.index}}" id="answer2" value="{{item[3]}}">
+                <label class="form-check-label" for="answer2">
+                    {{item[3]}}
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="question{{loop.index}}" id="answer3" value="{{item[4]}}">
+                <label class="form-check-label" for="answer3">
+                    {{item[4]}}
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="question{{loop.index}}" id="answer4" value="{{item[5]}}">
+                <label class="form-check-label" for="answer4">
+                    {{item[5]}}
+                </label>
+            </div>
+        {%endfor%}
+        <div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+    </form>
+
+</body>
+
+</html>

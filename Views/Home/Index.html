@@ -10,18 +10,24 @@
 </head>
 
 <body>
-    {%for item in data%}
-        <div class="d-inline-block mt-3 ml-3 w-25">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{item[1]}}</h5>
-                    <p>Open: {{item[2]}} - {{item[3]}}</p>
-                    <p>Time: {{item[4]}} minutes</p>
-                    <a href="/Quiz/{{item[0]}}">Take the quiz!!!</a>
+    <div class="container-fluid">
+        {%for item in data%}
+            <div class="d-inline-block mt-3 ml-3 w-25">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{item[1]}}</h5>
+                        <p>Open: {{item[2]}} - {{item[3]}}</p>
+                        <p>Time: {{item[4]}} minutes</p>
+                        <a href="/Quiz/{{item[0]}}">Take the quiz!!!</a>
+                    </div>
                 </div>
             </div>
+        {%endfor%}
+        <div class="float-right mt-3">
+            <a href="/Logout" type="button" class="btn btn-primary">Logout</a>
         </div>
-    {%endfor%}
+    </div>
+    
 </body>
 
 </html>

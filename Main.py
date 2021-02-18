@@ -7,10 +7,20 @@ app.secret_key = b'HieuPham-518H0501'
 @app.route('/' , methods=['GET'])
 def Home():
     if request.method == 'GET' and 'id' in session:
+        AccountID = session['id']
         query = 'SELECT * FROM subjects WHERE SubjectID IN (SELECT SubjectID FROM members WHERE AccountID = %s)'
-        val = (session['id'])
+        val = (AccountID)
         data = conn.executeQueryValData(query , val)
-        return render_template('Home/Index.html' , data=data)
+        status = []
+        for item in data:
+            query = 'SELECT * FROM results WHERE AccountID = %s AND SubjectID = %s'
+            val = (AccountID, item[0])
+            resultInfo = conn.executeQueryValData(query , val)
+            if len(resultInfo) == 1 and resultInfo[0][7] != None:
+                status.append(True)
+            else:
+                status.append(False)
+        return render_template('Home/Index.html' , data=data , status=status)
     return redirect(url_for('Login'))
 
 @app.route('/Login', methods=['POST' , 'GET'])
@@ -96,11 +106,13 @@ def Result(id):
     query = 'SELECT * FROM results WHERE AccountID = %s AND SubjectID = %s'
     val = (AccountID, id)
     data = conn.executeQueryValData(query,val)
-    query = 'SELECT SubjectName FROM subjects WHERE SubjectID = %s'
-    val = (id)
-    subject = conn.executeQueryValData(query,val)
-    return render_template('Home/Result.html' , data=data , subject=subject)
-
+    if len(data) == 1 and data[0][7] != None:
+        query = 'SELECT SubjectName FROM subjects WHERE SubjectID = %s'
+        val = (id)
+        subject = conn.executeQueryValData(query,val)
+        return render_template('Home/Result.html' , data=data , subject=subject)
+    else:
+        return redirect(url_for('Home'))
 @app.route('/Logout')
 def Logout():
     session.pop('id' , None)

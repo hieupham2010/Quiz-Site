@@ -18,7 +18,11 @@
                         <h5 class="card-title">{{item[1]}}</h5>
                         <p>Open: {{item[2]}} - {{item[3]}}</p>
                         <p>Time: {{item[4]}} minutes</p>
-                        <a href="/Quiz/{{item[0]}}">Take the quiz!!!</a>
+                        {%if status[loop.index-1] == True%}
+                            <a href="/Result/{{item[0]}}">View result</a>
+                        {%else%}
+                            <a href="/Quiz/{{item[0]}}">Take the quiz!!!</a>
+                        {%endif%}
                     </div>
                 </div>
             </div>

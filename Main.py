@@ -16,7 +16,6 @@ def Home():
             query = 'SELECT * FROM subjects WHERE SubjectID IN (SELECT SubjectID FROM members WHERE AccountID = %s)'
             val = (AccountID)
             data = conn.executeQueryValData(query , val)
-        print(data)
         for item in data:
             query = 'SELECT * FROM results WHERE AccountID = %s AND SubjectID = %s'
             val = (AccountID, item[0])
@@ -144,10 +143,73 @@ def AddQuestion(id):
         query = 'SELECT * FROM Subjects WHERE SubjectID = %s'
         val = (id)
         data = conn.executeQueryValData(query,val)
-        return render_template('Home/AddQuestion.html' , data=data)
+        if len(data) == 1:
+            return render_template('Home/AddQuestion.html' , data=data)
+        else:
+            return redirect(url_for('Home'))
     elif request.method == 'POST' and 'id' in session and session['id'] == 1:
-        print(request.form)
+        data = request.form
+        correct = ''
+        if data['Answer'] == 'A':
+            correct = data['SentenceA']
+        elif data['Answer'] == 'B':
+            correct = data['SentenceB']
+        elif data['Answer'] == 'C':
+            correct = data['SentenceC']
+        elif data['Answer'] == 'D':
+            correct = data['SentenceD'] 
+        query = 'INSERT INTO questions(question, ansA, ansB, ansC, ansD, correctAns, SubjectID) VALUES(%s,%s,%s,%s,%s,%s,%s)'
+        val = (data['Question'], data['SentenceA'], data['SentenceB'], data['SentenceC'], data['SentenceD'], correct, id)
+        conn.executeQueryValNonData(query,val)
+        flash('Add question successfully!')
+        query = 'SELECT * FROM Subjects WHERE SubjectID = %s'
+        val = (id)
+        data = conn.executeQueryValData(query,val)
+        if len(data) == 1:
+            return render_template('Home/AddQuestion.html' , data=data)
+        return 'Something went wrong!!!'
     return 'Unauthorized' , 401
+
+@app.route('/AddStudent/<SubID>/',methods=['GET'])
+@app.route('/AddStudent/<SubID>/<AccID>',methods=['GET'])
+def AddStudent(SubID,AccID=None):
+    if request.method == 'GET' and 'id' in session and session['id'] == 1:
+        if AccID == None:
+            query = 'SELECT * FROM subjects WHERE SubjectID = %s'
+            val = (SubID)
+            data = conn.executeQueryValData(query,val)
+            if len(data) == 1:
+                query = 'SELECT * FROM accounts WHERE AccountID NOT IN (SELECT AccountID FROM members WHERE SubjectID = %s)'
+                val = (SubID)
+                accInfo = conn.executeQueryValData(query,val)
+                return render_template('Home/AddStudent.html' , data=data, accInfo=accInfo)
+            else:
+                return redirect(url_for('Home'))
+        else:
+            query = 'SELECT * FROM subjects WHERE SubjectID = %s'
+            val = (SubID)
+            data = conn.executeQueryValData(query,val)
+            query = 'SELECT * FROM accounts WHERE AccountID = %s'
+            val = (AccID)
+            acc = conn.executeQueryValData(query,val)
+            if len(data) == 1 and len(acc) == 1:
+                query = 'SELECT * FROM members WHERE AccountID = %s AND SubjectID = %s'
+                val = (AccID , SubID)
+                memberInfo = conn.executeQueryValData(query, val)
+                if len(memberInfo) == 1:
+                    flash('Account already exists in this exam!')
+                else:
+                    query = 'INSERT INTO members VALUES(%s,%s)'
+                    val = (AccID,SubID)
+                    conn.executeQueryValNonData(query,val)
+                    flash('Add Student Successfully!')
+                query = 'SELECT * FROM accounts WHERE AccountID NOT IN (SELECT AccountID FROM members WHERE SubjectID = %s)'
+                val = (SubID)
+                accInfo = conn.executeQueryValData(query,val)
+                return render_template('Home/AddStudent.html' , data=data, accInfo=accInfo)
+            else:
+                return redirect(url_for('Home'))
+    return "Unsupported Method"
 
 if __name__ == "__main__":
     app.run(debug=True)

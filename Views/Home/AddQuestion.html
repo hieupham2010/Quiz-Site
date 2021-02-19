@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
-        td{
+        td {
             padding-bottom: 10px;
         }
     </style>
     <title>Detail</title>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="text-center">
@@ -23,11 +26,17 @@
             <form action="/AddQuestion/{{data[0][0]}}" method="POST">
                 <table class="w-100">
                     <tr>
+                        <td></td>
                         <td>
-                            <input class="form-check-input" type="radio" name="Answer" value="A">
+                            <input class="form-control" type="text" name="Question" id="" placeholder="Question" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="form-check-input" type="radio" name="Answer" value="A" required>
                         </td>
                         <td>
-                            <input class="form-control" type="text" name="SentenceA" id="" placeholder="Sentence A">
+                            <input class="form-control" type="text" name="SentenceA" id="" placeholder="Sentence A" required>
                         </td>
                     </tr>
                     <tr>
@@ -35,7 +44,7 @@
                             <input class="form-check-input" type="radio" name="Answer" value="B">
                         </td>
                         <td>
-                            <input class="form-control" type="text" name="SentenceB" id="" placeholder="Sentence B">
+                            <input class="form-control" type="text" name="SentenceB" id="" placeholder="Sentence B" required>
                         </td>
                     </tr>
                     <tr>
@@ -43,7 +52,7 @@
                             <input class="form-check-input" type="radio" name="Answer" value="C">
                         </td>
                         <td>
-                            <input class="form-control" type="text" name="SentenceC" id="" placeholder="Sentence C">
+                            <input class="form-control" type="text" name="SentenceC" id="" placeholder="Sentence C" required>
                         </td>
                     </tr>
                     <tr>
@@ -51,7 +60,7 @@
                             <input class="form-check-input" type="radio" name="Answer" value="D">
                         </td>
                         <td>
-                            <input class="form-control" type="text" name="SentenceD" id="" placeholder="Sentence D">
+                            <input class="form-control" type="text" name="SentenceD" id="" placeholder="Sentence D" required>
                         </td>
                     </tr>
                 </table>
@@ -59,8 +68,22 @@
                     <button type="submit" class="btn btn-primary">Add Question</button>
                 </div>
             </form>
+            <div id="flash-message">
+                {% with message = get_flashed_messages()%}
+                    {%if message %}
+                        <div class="alert alert-success" role="alert">
+                            {{message[0]}}
+                        </div>
+                    {%endif%}
+                {%endwith%}
+            </div>
+            
         </div>
         
     </div>
+    
 </body>
+    <script>
+        $("#flash-message").show("slow").delay(3000).hide("slow")
+    </script>
 </html>

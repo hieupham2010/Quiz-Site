@@ -41,7 +41,8 @@
                         <a href="/Quiz/{{item[0]}}">Take the quiz!!!</a>
                     {%endif%}
                     {%if session['id'] == 1 %}
-                        <a class="float-right" href="/AddQuestion/{{item[0]}}">Add Question</a>
+                        <a class="float-right" href="/AddQuestion/{{item[0]}}">Add Question</a><br>
+                        <a class="float-right" href="/AddStudent/{{item[0]}}">Add Student</a>
                     {%endif%}
                 </div>
             </div>

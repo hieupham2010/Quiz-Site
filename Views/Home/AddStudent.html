@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Add Student</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="text-center">
+            <h3>{{data[0][1]}}</h3>
+            <p>Open: {{data[0][2]}} - {{data[0][3]}}</p>
+            <p>Time: {{data[0][4]}} minutes</p>
+        </div>
+        <div class="w-75 text-center m-auto">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">User Name</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in accInfo %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{item[1]}}</td>
+                        <td><a href="/AddStudent/{{data[0][0]}}/{{item[0]}}" class="btn btn-primary w-25">Add</a></td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+            <div id="flash-message">
+                {% with message = get_flashed_messages()%}
+                {%if message %}
+                <div class="alert alert-success" role="alert">
+                    {{message[0]}}
+                </div>
+                {%endif%}
+                {%endwith%}
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $("#flash-message").show("slow").delay(3000).hide("slow")
+</script>
+
+</html>

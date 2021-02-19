@@ -10,28 +10,45 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" style="font-size: 24px;" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                {%if session['id'] == 1 %}
+                    <li class="nav-item active">
+                        <a class="nav-link" style="font-size: 24px;" href="/CreateExam">Create Exam <span class="sr-only">(current)</span></a>
+                    </li>
+                {%endif%}
+            </ul>
+            <div class="float-right">
+                <a href="/Logout" type="button" class="btn btn-primary">Logout</a>
+            </div>
+        </div>
+    </nav>
     <div class="container-fluid">
         {%for item in data%}
-            <div class="d-inline-block mt-3 ml-3 w-25">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{item[1]}}</h5>
-                        <p>Open: {{item[2]}} - {{item[3]}}</p>
-                        <p>Time: {{item[4]}} minutes</p>
-                        {%if status[loop.index-1] == True%}
-                            <a href="/Result/{{item[0]}}">View result</a>
-                        {%else%}
-                            <a href="/Quiz/{{item[0]}}">Take the quiz!!!</a>
-                        {%endif%}
-                    </div>
+        <div class="d-inline-block mt-3 ml-3 w-25">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{item[1]}}</h5>
+                    <p>Open: {{item[2]}} - {{item[3]}}</p>
+                    <p>Time: {{item[4]}} minutes</p>
+                    {%if status[loop.index-1] == True%}
+                        <a href="/Result/{{item[0]}}">View result</a>
+                    {%else%}
+                        <a href="/Quiz/{{item[0]}}">Take the quiz!!!</a>
+                    {%endif%}
+                    {%if session['id'] == 1 %}
+                        <a class="float-right" href="/AddQuestion/{{item[0]}}">Add Question</a>
+                    {%endif%}
                 </div>
             </div>
-        {%endfor%}
-        <div class="float-right mt-3">
-            <a href="/Logout" type="button" class="btn btn-primary">Logout</a>
         </div>
+        {%endfor%}
     </div>
-    
+
 </body>
 
 </html>

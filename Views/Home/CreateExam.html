@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Create exam</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="text-center">
+            <h1>Create Exam</h1>
+        </div>
+        <div class="m-auto w-50">
+            <form action="/CreateExam" method="POST">
+                <div class="form-group">
+                    <label for="SubjectName">Subject Name</label>
+                    <input type="text" class="form-control" id="SubjectName" name="SubjectName" placeholder="Subject Name">
+                </div>
+                <div class="form-group">
+                    <label for="StartTime">Start Time</label>
+                    <input type="date" class="form-control" id="StartTime" name="StartTime">
+                </div>
+                <div class="form-group">
+                    <label for="EndTime">End Time</label>
+                    <input type="date" class="form-control" id="EndTime" name="EndTime">
+                </div>
+                <div class="form-group">
+                    <label for="Time">Time (Minutes)</label>
+                    <input type="text" class="form-control" id="Time" name="Time" placeholder="Time">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    
+</body>
+
+</html>

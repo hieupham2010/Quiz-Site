@@ -8,10 +8,15 @@ app.secret_key = b'HieuPham-518H0501'
 def Home():
     if request.method == 'GET' and 'id' in session:
         AccountID = session['id']
-        query = 'SELECT * FROM subjects WHERE SubjectID IN (SELECT SubjectID FROM members WHERE AccountID = %s)'
-        val = (AccountID)
-        data = conn.executeQueryValData(query , val)
         status = []
+        if AccountID == 1:
+            query = 'SELECT * FROM subjects'
+            data = conn.executeQueryData(query)
+        else:
+            query = 'SELECT * FROM subjects WHERE SubjectID IN (SELECT SubjectID FROM members WHERE AccountID = %s)'
+            val = (AccountID)
+            data = conn.executeQueryValData(query , val)
+        print(data)
         for item in data:
             query = 'SELECT * FROM results WHERE AccountID = %s AND SubjectID = %s'
             val = (AccountID, item[0])
@@ -44,7 +49,7 @@ def Login():
 
 @app.route('/Quiz/<id>' , methods=['POST' , 'GET'])
 def Quiz(id):
-    if request.method == 'GET':
+    if request.method == 'GET' and 'id' in session:
         AccountID = session['id']
         query = 'SELECT * FROM members WHERE SubjectID = %s AND AccountID = %s'
         val = (id , AccountID)
@@ -71,7 +76,7 @@ def Quiz(id):
                 conn.executeQueryValNonData(query,val)
                 return render_template('Home/Quiz.html' , data=data , id=id, subjectInfo=subjectInfo)
         return redirect(url_for('Home'))
-    elif request.method == 'POST':
+    elif request.method == 'POST' and 'id' in session:
         data = request.form.to_dict()
         query = 'SELECT COUNT(*) FROM questions WHERE SubjectID = %s'
         val = (id)
@@ -99,24 +104,50 @@ def Quiz(id):
         conn.executeQueryValNonData(query, val)
         url = '/Result/{}'
         return redirect(url.format(id))
+    return 'Unauthorized' , 401
 
 @app.route('/Result/<id>' , methods=['GET'])
 def Result(id):
-    AccountID = session['id']
-    query = 'SELECT * FROM results WHERE AccountID = %s AND SubjectID = %s'
-    val = (AccountID, id)
-    data = conn.executeQueryValData(query,val)
-    if len(data) == 1 and data[0][7] != None:
-        query = 'SELECT SubjectName FROM subjects WHERE SubjectID = %s'
-        val = (id)
-        subject = conn.executeQueryValData(query,val)
-        return render_template('Home/Result.html' , data=data , subject=subject)
-    else:
-        return redirect(url_for('Home'))
+    if 'id' in session:
+        AccountID = session['id']
+        query = 'SELECT * FROM results WHERE AccountID = %s AND SubjectID = %s'
+        val = (AccountID, id)
+        data = conn.executeQueryValData(query,val)
+        if len(data) == 1 and data[0][7] != None:
+            query = 'SELECT SubjectName FROM subjects WHERE SubjectID = %s'
+            val = (id)
+            subject = conn.executeQueryValData(query,val)
+            return render_template('Home/Result.html' , data=data , subject=subject)
+        else:
+            return redirect(url_for('Home'))
+    return 'Unauthorized' , 401
 @app.route('/Logout')
 def Logout():
     session.pop('id' , None)
     return redirect(url_for("Home"))
+
+@app.route('/CreateExam', methods=['POST' , 'GET'])
+def CreateExam():
+    if request.method == 'POST' and 'id' in session and session['id'] == 1:
+        data = request.form
+        query = 'INSERT INTO Subjects(SubjectName,StartTime,EndTime,Time) VALUES(%s,%s,%s,%s)'
+        val = (data['SubjectName'] , data['StartTime'] , data['EndTime'], data['Time'])
+        conn.executeQueryValNonData(query,val)
+        return redirect(url_for('Home'))
+    elif request.method == 'GET' and 'id' in session and session['id'] == 1:
+        return render_template('Home/CreateExam.html')
+    return 'Unsupported method'
+
+@app.route('/AddQuestion/<id>' , methods=['POST' , 'GET'])
+def AddQuestion(id):
+    if request.method == 'GET' and 'id' in session and session['id'] == 1:
+        query = 'SELECT * FROM Subjects WHERE SubjectID = %s'
+        val = (id)
+        data = conn.executeQueryValData(query,val)
+        return render_template('Home/AddQuestion.html' , data=data)
+    elif request.method == 'POST' and 'id' in session and session['id'] == 1:
+        print(request.form)
+    return 'Unauthorized' , 401
 
 if __name__ == "__main__":
     app.run(debug=True)

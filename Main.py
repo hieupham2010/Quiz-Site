@@ -211,5 +211,23 @@ def AddStudent(SubID,AccID=None):
                 return redirect(url_for('Home'))
     return "Unsupported Method"
 
+@app.route('/CreateAccount' , methods=['POST' , 'GET'])
+def CreateAccount():
+    if request.method == 'GET' and 'id' in session and session['id'] == 1:
+        return render_template('Home/CreateAccount.html')
+    elif request.method == 'POST' and 'id' in session and session['id'] == 1:
+        data = request.form
+        print(data)
+        query = 'SELECT * FROM accounts WHERE Username = %s'
+        val = (data['username'])
+        accInfo = conn.executeQueryValData(query,val)
+        if len(accInfo) >= 1:
+            flash('Account already exists please try again')
+        else:
+            query = 'INSERT INTO accounts(Username,Password) VALUES(%s,%s)'
+            val = (data['username'], data['password'])
+            conn.executeQueryValNonData(query, val)
+            flash('Create account success')
+        return render_template('Home/CreateAccount.html')
 if __name__ == "__main__":
     app.run(debug=True)

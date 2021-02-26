@@ -2,8 +2,11 @@ from flask import Flask,request, render_template, redirect, url_for, session,fla
 import connection as conn
 from datetime import datetime
 from time import time
+
 app = Flask(__name__ , template_folder='Views')
 app.secret_key = b'HieuPham-518H0501'
+
+
 @app.route('/' , methods=['GET'])
 def Home():
     if request.method == 'GET' and 'id' in session:
@@ -45,6 +48,7 @@ def Login():
                 return redirect(url_for('Login'))
         else: return "Something went wrong"
     return "Unsupported method"
+
 
 @app.route('/Quiz/<id>' , methods=['POST' , 'GET'])
 def Quiz(id):
